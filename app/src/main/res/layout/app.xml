@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <cn.iwakeup.slidedrawer.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <RelativeLayout
+        android:padding="20dp"
+        android:background="#1A018786"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/button_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/open_or_close_drawer_btn"
+            android:text="Open/Close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/open_or_close_drawer_text"
+            android:layout_below="@id/open_or_close_drawer_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Open/Close" />
+
+
+        <Button
+            android:id="@+id/enable_or_disable_drawer_btn"
+            android:text="Disable/Enable"
+            android:layout_toEndOf="@id/open_or_close_drawer_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/enable_or_disable_text"
+            android:layout_alignStart="@id/enable_or_disable_drawer_btn"
+            android:text="Enable/Disable"
+            android:layout_below="@id/enable_or_disable_drawer_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/drawer_progress_text"
+            android:text="Progress:0"
+            android:layout_toEndOf="@id/enable_or_disable_drawer_btn"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:textAlignment="center"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
+
+            />
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
