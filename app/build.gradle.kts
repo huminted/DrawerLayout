@@ -44,11 +44,14 @@ dependencies {
     implementation(libs.androidx.dynamicanimation.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.coordinatorlayout)
+
 
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     implementation(project(":Drawer"))
+//    implementation("com.github.huminted:WVDrawerContainer:d1a3258785")
 
 
 }

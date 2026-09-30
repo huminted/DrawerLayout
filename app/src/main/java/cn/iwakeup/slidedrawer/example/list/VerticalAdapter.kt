@@ -44,32 +44,21 @@ class VerticalAdapter(
 
         holder.title.text = "第 ${position + 1} 行"
 
-        holder.horizontalList.layoutManager =
-            LinearLayoutManager(
-                holder.itemView.context,
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
+        if (position % 4 == 0) {
+            holder.horizontalList.layoutManager =
+                LinearLayoutManager(
+                    holder.itemView.context,
+                    LinearLayoutManager.HORIZONTAL,
+                    false
+                )
 
-//        holder.horizontalList.setOnTouchListener { v, event ->
-//
-//            when (event.actionMasked) {
-//
-//                MotionEvent.ACTION_DOWN -> {
-//                    v.parent.requestDisallowInterceptTouchEvent(true)
-//                }
-//
-//                MotionEvent.ACTION_UP,
-//                MotionEvent.ACTION_CANCEL -> {
-//                    v.parent.requestDisallowInterceptTouchEvent(false)
-//                }
-//            }
-//
-//            false
-//        }
 
-        holder.horizontalList.adapter =
-            HorizontalAdapter(items[position])
+
+            holder.horizontalList.adapter =
+                HorizontalAdapter(items[position])
+        }
+
+
     }
 
     override fun getItemCount() = items.size

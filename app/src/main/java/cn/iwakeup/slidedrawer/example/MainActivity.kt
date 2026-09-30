@@ -8,7 +8,7 @@ import android.view.ViewGroup
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import cn.iwakeup.slidedrawer.SlideDrawer
+import cn.iwakeup.slidedrawer.DrawerLayout
 import cn.iwakeup.slidedrawer.example.list.VerticalAdapter
 
 class MainActivity : Activity() {
@@ -19,9 +19,12 @@ class MainActivity : Activity() {
 
         setContentView(R.layout.app)
 
-        val drawer = findViewById<SlideDrawer>(R.id.drawer)
+        val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
         drawer.setMainContent(getMainContent())
         drawer.setDrawerContent(getDrawerContent())
+        drawer.setDrawerWidth(250)
+
+
     }
 
 

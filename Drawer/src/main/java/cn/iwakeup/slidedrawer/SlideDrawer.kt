@@ -1,72 +1,48 @@
 package cn.iwakeup.slidedrawer
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewPropertyAnimator
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.Scroller
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import kotlin.math.abs
 
-class SlideDrawer(context: Context, attrs: AttributeSet? = null) : FrameLayout(context, attrs, 0),
+class SlideDrawer(context: Context, attrs: AttributeSet? = null) :
+    FrameLayout(context, attrs, 0),
     GesturableSlideDrawer {
 
-    private val drawerWidth = toPx(context, 350)
 
-    var drawerContainer: ViewGroup
-    var mainContainer: ViewGroup
-
-
-    val scroller = Scroller(context)
-
+    private val scroller = Scroller(context)
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.drawer, this, true)
-        drawerContainer = findViewById<ViewGroup>(R.id.drawer_content_container).apply {
-            layoutParams = LayoutParams(drawerWidth, LayoutParams.MATCH_PARENT)
-            translationX = -drawerWidth.toFloat()
-        }
-
-        mainContainer = findViewById(R.id.main_content_container)
+        setBackgroundColor(Color.CYAN)
     }
 
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
+    }
 
     fun setDrawerContent(drawerContent: View) {
         if (drawerContent.parent == null) {
-            drawerContainer.removeAllViews()
-            drawerContainer.addView(drawerContent)
+            removeAllViews()
+            addView(drawerContent)
         }
     }
-
-    fun setMainContent(mainContent: View) {
-        if (mainContent.parent == null) {
-            mainContainer.removeAllViews()
-            mainContainer.addView(mainContent)
-        }
-
-    }
-
-
-    override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
-        if (GestureDelegate.onInterceptTouchEvent(event)) {
-            return true
-        }
-        return super.onInterceptTouchEvent(event)
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        return GestureDelegate.onTouchEvent(this, event)
-    }
-
 
     private fun setDrawerToInitialPosition(duration: Float = 100f) {
-        drawerContainer.animate()
-            .translationX(-drawerWidth.toFloat())
+        animate().translationX(-measuredWidth.toFloat())
             .setInterpolator(AccelerateDecelerateInterpolator())
             .setDuration(duration.toLong())
             .start()
@@ -76,7 +52,7 @@ class SlideDrawer(context: Context, attrs: AttributeSet? = null) : FrameLayout(c
 
 
     private fun setDrawerToExpandedPosition(duration: Float = 100f) {
-        drawerContainer.animate().translationX(0f)
+        animate().translationX(0f)
             .setInterpolator(AccelerateDecelerateInterpolator())
             .setDuration(duration.toLong())
             .start()
@@ -84,54 +60,36 @@ class SlideDrawer(context: Context, attrs: AttributeSet? = null) : FrameLayout(c
 
     }
 
-    private fun flingToInitialPosition(velocity: Float) {
-        setDrawerToInitialPosition(computeFlingDuration(velocity))
-    }
 
+    override fun onScrollDrawer(distanceX: Float) {
+        val destinationX = (translationX + distanceX)
 
-    private fun flingToExpandedPosition(velocity: Float) {
-        setDrawerToExpandedPosition(computeFlingDuration(velocity))
-
-    }
-
-
-    private fun computeFlingDuration(velocity: Float): Float {
-        scroller.fling(
-            drawerContainer.translationX.toInt(), 0,
-            velocity.toInt(), 0,
-            -drawerWidth, 0,
-            0, 0
-        )
-        val baseDuration = scroller.duration.toFloat()
-
-
-        val absVelocity = abs(velocity).coerceAtLeast(1f)
-
-        val referenceVelocity = 1000f
-
-
-        val calculatedDuration = (baseDuration * (referenceVelocity / absVelocity)).toLong()
-
-        val finalDuration = calculatedDuration.coerceIn(50, 400).toFloat()
-
-        println("computeFlingDuration,velocity: ${velocity},baseDuration:${baseDuration},finalDuration,$finalDuration")
-
-        return finalDuration
-
-    }
-
-    private fun updateDrawerPosition(translationX: Float) {
-        if (translationX >= 0) {
-            drawerContainer.translationX = 0f
+        if (destinationX >= 0) {
+            this.translationX = 0f
         } else {
-            drawerContainer.translationX = translationX
+            this.translationX = destinationX
         }
     }
 
+    override fun onFlingDrawer(
+        velocityX: Float,
+        direction: GesturableSlideDrawer.SlideDirection
+    ) {
 
-    private fun onScrollingComplete() {
-        val currentTranslation = drawerContainer.translationX
-        val middleTranslationX = -(drawerWidth / 2)
+        // LEFT_TO_RIGHT destinationX is the position drawer is expanded
+        // otherwise,the position drawer is hidden
+        val destinationX =
+            if (direction == GesturableSlideDrawer.SlideDirection.LEFT_TO_RIGHT) 0 else -measuredWidth
+
+        // dx = destinationX - currentX
+        val dx = destinationX - translationX
+        scroller.startScroll(translationX.toInt(), 0, dx.toInt(), 0)
+        invalidate()
+    }
+
+    override fun onGestureFinished() {
+        val currentTranslation = translationX
+        val middleTranslationX = -(measuredWidth / 2)
 
         if (currentTranslation < middleTranslationX) {
             setDrawerToInitialPosition()
@@ -140,28 +98,12 @@ class SlideDrawer(context: Context, attrs: AttributeSet? = null) : FrameLayout(c
         }
     }
 
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        GestureDelegate.release()
-    }
-
-    override fun onScrollDrawer(distanceX: Float) {
-        updateDrawerPosition(drawerContainer.translationX + distanceX)
-    }
-
-    override fun onFlingDrawer(
-        velocityX: Float,
-        direction: GesturableSlideDrawer.SlideDirection
-    ) {
-        if (direction == GesturableSlideDrawer.SlideDirection.LEFT_TO_RIGHT) {
-            flingToExpandedPosition(velocityX)
-        } else {
-            flingToInitialPosition(velocityX)
+    override fun computeScroll() {
+        if (scroller.computeScrollOffset()) {
+            translationX = scroller.currX.toFloat()
+            // Keep animating until the scroller stops
+            postInvalidateOnAnimation()
         }
-    }
-
-    override fun onGestureFinished() {
-        onScrollingComplete()
     }
 
 

@@ -27,12 +27,13 @@ android {
 dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.coordinatorlayout)
     implementation(libs.material)
 }
 
 afterEvaluate {
     println("Publishing")
-    val versionNumber = "0.0.1"
+    val versionNumber = "0.0.2"
     publishing {
         publications {
             register<MavenPublication>("release") {
