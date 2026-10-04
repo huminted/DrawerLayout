@@ -1,8 +1,16 @@
 # DrawerLayout
 
-A lightweight and easy-to-integrate Android drawer component for side-slide layouts. It supports gesture drag, programmatic open/close control, adjustable drawer width, drawer progress callbacks, and custom main/drawer content.
-
 [![](https://jitpack.io/v/huminted/DrawerLayout.svg)](https://jitpack.io/#huminted/DrawerLayout)
+
+A lightweight and easy-to-integrate Android drawer component for side-slide layouts. `DrawerLayout` provides gesture-driven navigation with simple APIs for custom content, programmatic control, swipe configuration, and drawer progress tracking.
+
+## Why DrawerLayout?
+
+- Simple API with no XML configuration required for drawer content
+- Smooth left-side drawer gestures
+- Easy to integrate with activities, fragments, and custom views
+- Programmatic control when you need buttons or business logic to open the drawer
+- Progress callbacks for custom animations and UI effects
 
 ## Features
 
@@ -130,7 +138,7 @@ drawer.setDrawerSwipeable(true)
 
 ## Example usage from the sample app
 
-The repository contains a sample app under the `app` module. The example activity uses the following pattern:
+The repository contains a sample app under the `app` module. The example activity demonstrates how to configure the drawer, toggle its state, enable or disable swipe gestures, and observe the opening progress.
 
 ```kotlin
 package cn.iwakeup.slidedrawer.example
@@ -186,9 +194,20 @@ This example is based on:
 
 > Replace `openOrCloseButton`, `enableOrDisableButton`, `getBlankFrameLayout`, and `getDrawerContent` with your own views and content creation logic.
 
+## Project structure
+
+```text
+DrawerLayout/
+├── Drawer/   # Reusable drawer library module
+└── app/      # Sample Android application
+```
+
 ## Run the sample app
 
-Open the project in Android Studio and run the `app` module to view the drawer in action.
+1. Clone or download the repository.
+2. Open the project in Android Studio.
+3. Select the `app` run configuration.
+4. Run the application on an Android device or emulator.
 
 ## Notes
 
