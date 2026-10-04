@@ -4,26 +4,6 @@
 
 A lightweight and easy-to-integrate Android drawer component for side-slide layouts. `DrawerLayout` provides gesture-driven navigation with simple APIs for custom content, programmatic control, swipe configuration, and drawer progress tracking.
 
-## Why DrawerLayout?
-
-- Simple API with no XML configuration required for drawer content
-- Smooth left-side drawer gestures
-- Easy to integrate with activities, fragments, and custom views
-- Programmatic control when you need buttons or business logic to open the drawer
-- Progress callbacks for custom animations and UI effects
-
-## Features
-
-- Left-side drawer support
-- Gesture-based drag to open and close
-- Programmatic open/close control
-- Custom drawer width
-- Custom main content and drawer content
-- Enable or disable swipe gestures
-- Drawer progress listener
-- Clickable dim background to close the drawer
-- Minimum Android API level: 24
-
 ## Installation
 
 ### 1. Add JitPack to your project
@@ -194,14 +174,6 @@ This example is based on:
 
 > Replace `openOrCloseButton`, `enableOrDisableButton`, `getBlankFrameLayout`, and `getDrawerContent` with your own views and content creation logic.
 
-## Project structure
-
-```text
-DrawerLayout/
-├── Drawer/   # Reusable drawer library module
-└── app/      # Sample Android application
-```
-
 ## Run the sample app
 
 1. Clone or download the repository.
@@ -219,4 +191,22 @@ DrawerLayout/
 
 ## License
 
-This project does not currently declare a specific open-source license in the repository. Please confirm the usage terms with the project owner before distribution or commercial use.
+Copyright (c) 2026 huminted
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
