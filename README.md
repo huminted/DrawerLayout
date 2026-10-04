@@ -1,10 +1,10 @@
 # DrawerLayout
 
-![DrawerLayout Logo](docs/drawer-layout-logo.svg)
+<img src="docs/drawer-layout-logo.svg" alt="DrawerLayout Logo" width="180">
 
 [![](https://jitpack.io/v/huminted/DrawerLayout.svg)](https://jitpack.io/#huminted/DrawerLayout)
 
-A lightweight and easy-to-integrate Android drawer component for side-slide layouts. `DrawerLayout` provides gesture-driven navigation with simple APIs for custom content, programmatic control, swipe configuration, and drawer progress tracking.
+A lightweight and easy-to-integrate Android drawer component for side-slide layouts. `DrawerLayout` provides gesture-driven navigation with simple APIs for custom content, programmatic control, swipe gestures, and customizable drawer behavior.
 
 ## Installation
 
