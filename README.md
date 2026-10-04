@@ -1,26 +1,26 @@
 # DrawerLayout
 
-一个轻量、易集成的 Android 侧滑抽屉组件，支持手势滑动、代码控制打开/关闭、抽屉宽度配置、抽屉滑动进度监听，以及自定义主内容和抽屉内容。
+A lightweight and easy-to-integrate Android drawer component for side-slide layouts. It supports gesture drag, programmatic open/close control, adjustable drawer width, drawer progress callbacks, and custom main/drawer content.
 
-[![JitPack](https://jitpack.io/v/huminted/DrawerLayout.svg)](https://jitpack.io/#huminted/DrawerLayout)
+[![](https://jitpack.io/v/huminted/DrawerLayout.svg)](https://jitpack.io/#huminted/DrawerLayout)
 
-## 功能特性
+## Features
 
-- 支持从左侧滑出 Drawer
-- 支持手势拖拽打开和关闭
-- 支持通过代码打开、关闭 Drawer
-- 支持自定义 Drawer 宽度
-- 支持自定义主内容和抽屉内容
-- 支持禁用或启用手势滑动
-- 支持监听 Drawer 打开进度，进度范围为 `0f..1f`
-- 点击遮罩层可关闭 Drawer
-- 最低支持 Android API 24
+- Left-side drawer support
+- Gesture-based drag to open and close
+- Programmatic open/close control
+- Custom drawer width
+- Custom main content and drawer content
+- Enable or disable swipe gestures
+- Drawer progress listener
+- Clickable dim background to close the drawer
+- Minimum Android API level: 24
 
-## 安装
+## Installation
 
-### 1. 添加 JitPack 仓库
+### 1. Add JitPack to your project
 
-在项目的 `settings.gradle.kts` 中添加 JitPack 仓库：
+In `settings.gradle.kts`:
 
 ```kotlin
 dependencyResolutionManagement {
@@ -33,7 +33,7 @@ dependencyResolutionManagement {
 }
 ```
 
-如果项目使用的是 Groovy DSL，则添加：
+For Groovy DSL:
 
 ```groovy
 repositories {
@@ -43,7 +43,7 @@ repositories {
 }
 ```
 
-### 2. 添加依赖
+### 2. Add the dependency
 
 ```kotlin
 dependencies {
@@ -51,13 +51,13 @@ dependencies {
 }
 ```
 
-> 版本号请以 [JitPack 发布版本](https://jitpack.io/#huminted/DrawerLayout) 为准。
+> Check the [JitPack release page](https://jitpack.io/#huminted/DrawerLayout) for the latest available version.
 
-## 快速开始
+## Quick Start
 
-### XML 中声明 DrawerLayout
+### XML declaration
 
-`DrawerLayout` 本身是一个容器，不需要在 XML 中直接放置主内容或抽屉内容，这些内容可以在 Kotlin 代码中动态设置：
+`DrawerLayout` is a container. Its main content and drawer content can be set dynamically from Kotlin:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -67,7 +67,7 @@ dependencies {
     android:layout_height="match_parent" />
 ```
 
-### Kotlin 中配置内容
+### Configure the drawer in Kotlin
 
 ```kotlin
 val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
@@ -77,62 +77,60 @@ drawer.setDrawerContent(getDrawerContent(this))
 drawer.setDrawerWidth(300)
 ```
 
-`setDrawerWidth(300)` 的单位是 dp，默认宽度也是 `300dp`。
+`setDrawerWidth(300)` uses dp as the input unit. The default drawer width is `300dp`.
 
-### 打开和关闭 Drawer
+### Open and close the drawer
 
 ```kotlin
-// 打开
- drawer.openDrawer()
+// Open
+drawer.openDrawer()
 
-// 关闭
- drawer.closeDrawer()
+// Close
+drawer.closeDrawer()
 ```
 
-## 常用 API
+## Common API
 
-| API | 说明 |
+| API | Description |
 | --- | --- |
-| `setMainContent(view)` | 设置主内容视图 |
-| `setDrawerContent(view)` | 设置 Drawer 内容视图 |
-| `setDrawerWidth(widthDp)` | 设置 Drawer 宽度，单位为 dp |
-| `openDrawer()` | 以动画打开 Drawer |
-| `closeDrawer()` | 以动画关闭 Drawer |
-| `setDrawerSwipeable(enabled)` | 启用或禁用手势滑动 |
-| `setDimmingViewClickable(clickable)` | 设置点击遮罩层是否关闭 Drawer |
-| `addDrawerListener(listener)` | 监听 Drawer 滑动进度 |
-| `getDrawer()` | 获取底层 `SlideDrawer` 实例 |
+| `setMainContent(view)` | Sets the main content view. |
+| `setDrawerContent(view)` | Sets the drawer content view. |
+| `setDrawerWidth(widthDp)` | Sets the drawer width in dp. |
+| `openDrawer()` | Opens the drawer with animation. |
+| `closeDrawer()` | Closes the drawer with animation. |
+| `setDrawerSwipeable(enabled)` | Enables or disables swipe gestures. |
+| `setDimmingViewClickable(clickable)` | Enables or disables closing by tapping the dim background. |
+| `addDrawerListener(listener)` | Registers a drawer progress listener. |
+| `getDrawer()` | Returns the underlying `SlideDrawer` instance. |
 
-## 监听滑动进度
+## Listen to drawer progress
 
-`SlideDrawer.Listener#onProgress` 会在 Drawer 滑动时回调，进度范围为 `0f..1f`：
+`SlideDrawer.Listener#onProgress` is called while the drawer is moving. The progress value ranges from `0f` to `1f`:
 
 ```kotlin
 import cn.iwakeup.slidedrawer.SlideDrawer
 
 drawer.addDrawerListener(object : SlideDrawer.Listener {
     override fun onProgress(progress: Float) {
-        // 0f：完全关闭；1f：完全打开
+        // 0f = fully closed, 1f = fully opened
         progressText.text = "Open Progress:\n$progress"
     }
 })
 ```
 
-## 禁用和启用手势
-
-如果只希望通过按钮或业务逻辑控制 Drawer，可以禁用手势滑动：
+## Enable or disable swipe gestures
 
 ```kotlin
-// 禁用手势
- drawer.setDrawerSwipeable(false)
+// Disable swipe gestures
+drawer.setDrawerSwipeable(false)
 
-// 重新启用手势
- drawer.setDrawerSwipeable(true)
+// Re-enable swipe gestures
+drawer.setDrawerSwipeable(true)
 ```
 
-## 完整示例
+## Example usage from the sample app
 
-下面的示例来自 `app` 模块中的 `MainActivity.kt`，展示了如何设置主内容、抽屉内容、抽屉宽度，以及控制 Drawer 的开关和手势：
+The repository contains a sample app under the `app` module. The example activity uses the following pattern:
 
 ```kotlin
 package cn.iwakeup.slidedrawer.example
@@ -174,32 +172,32 @@ class MainActivity : AppCompatActivity() {
 
         drawer.addDrawerListener(object : SlideDrawer.Listener {
             override fun onProgress(progress: Float) {
-                // 根据 progress 更新 UI
+                // Update the UI based on progress
             }
         })
     }
 }
 ```
 
-> 上面的 `openOrCloseButton`、`enableOrDisableButton`、`getBlankFrameLayout` 和 `getDrawerContent` 仅用于说明，实际项目中请替换为自己的 View 和内容创建逻辑。
+This example is based on:
 
-## 在项目中运行示例
+- `app/src/main/java/cn/iwakeup/slidedrawer/example/MainActivity.kt`
+- `app/src/main/res/layout/app.xml`
 
-仓库包含一个 `app` 示例模块：
+> Replace `openOrCloseButton`, `enableOrDisableButton`, `getBlankFrameLayout`, and `getDrawerContent` with your own views and content creation logic.
 
-- 示例入口：`app/src/main/java/cn/iwakeup/slidedrawer/example/MainActivity.kt`
-- 示例布局：`app/src/main/res/layout/app.xml`
-- Library 模块：`Drawer`
+## Run the sample app
 
-使用 Android Studio 打开项目后，运行 `app` 模块即可查看完整效果。
+Open the project in Android Studio and run the `app` module to view the drawer in action.
 
-## 注意事项
+## Notes
 
-- `setDrawerWidth` 使用 dp 作为输入参数，组件内部会自动转换为 px。
-- `setMainContent` 和 `setDrawerContent` 会替换容器中已有的对应内容。
-- Drawer 默认通过点击遮罩层关闭；如需改变此行为，可调用 `setDimmingViewClickable(false)`。
-- 如果主内容中包含横向可滑动控件，建议结合实际交互测试手势冲突场景。
+- `setDrawerWidth` accepts dp values and internally converts them to px.
+- `setMainContent` and `setDrawerContent` replace the existing content in their respective containers.
+- The drawer closes when the dimmed background is tapped by default.
+- To disable this behavior, call `setDimmingViewClickable(false)`.
+- If the main content contains horizontally scrollable views, test gesture interactions carefully.
 
 ## License
 
-本项目暂未声明具体开源协议。使用或分发前，请先确认仓库维护者的授权范围。
+This project does not currently declare a specific open-source license in the repository. Please confirm the usage terms with the project owner before distribution or commercial use.
