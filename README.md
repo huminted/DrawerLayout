@@ -37,7 +37,7 @@ repositories {
 
 ```kotlin
 dependencies {
-    implementation("com.github.huminted:drawerLayout:0.0.8")
+    implementation 'com.github.huminted:DrawerLayout:<latestTag>'
 }
 ```
 
