@@ -174,12 +174,6 @@ This example is based on:
 
 > Replace `openOrCloseButton`, `enableOrDisableButton`, `getBlankFrameLayout`, and `getDrawerContent` with your own views and content creation logic.
 
-## Run the sample app
-
-1. Clone or download the repository.
-2. Open the project in Android Studio.
-3. Select the `app` run configuration.
-4. Run the application on an Android device or emulator.
 
 ## Notes
 
