@@ -109,7 +109,7 @@ class DrawerLayout(context: Context, attrs: AttributeSet? = null) :
     }
 
 
-    fun addDrawerListener(listener: DrawerListener) {
+    fun setDrawerListener(listener: DrawerListener) {
         drawerProgressListener = listener
     }
 
