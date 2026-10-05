@@ -2,8 +2,8 @@ package cn.iwakeup.slidedrawer
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.View
 import android.view.ViewConfiguration
@@ -32,8 +32,8 @@ fun prepareMainContainer(
     context: Context,
     drawerGestureDetector: DrawerGestureDetector,
     overlayGestureDetector: OverlayGestureDetector,
-    onTouchEventStart: () -> Unit,
-    onTouchEventEnd: () -> Unit
+    onTouchEventStart: (ev: MotionEvent) -> Unit,
+    onTouchEventEnd: (ev: MotionEvent) -> Unit
 ): ViewGroup {
     return FrameLayout(context).apply {
         layoutParams = LayoutParams(
@@ -51,8 +51,8 @@ fun prepareMainContainer(
 class DrawerLayout(context: Context, attrs: AttributeSet? = null) :
     CoordinatorLayout(context, attrs), SlideDrawer.Listener {
     interface DrawerListener : SlideDrawer.Listener {
-        fun onStart()
-        fun onEnd()
+        fun onStart(ev: MotionEvent)
+        fun onEnd(ev: MotionEvent)
 
     }
 
@@ -73,11 +73,11 @@ class DrawerLayout(context: Context, attrs: AttributeSet? = null) :
         context,
         drawerGestureDetector,
         overlayGestureDetector,
-        {
-            drawerProgressListener?.onStart()
+        { ev ->
+            drawerProgressListener?.onStart(ev)
         },
-        {
-            drawerProgressListener?.onEnd()
+        { ev ->
+            drawerProgressListener?.onEnd(ev)
         }
     )
     private val overlayDrawable = Color.BLACK.toDrawable().apply {

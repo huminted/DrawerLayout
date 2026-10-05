@@ -12,8 +12,8 @@ class DrawerTriggerBehavior(
     context: Context,
     val drawerGestureDetector: DrawerGestureDetector,
     val overlayGestureDetector: OverlayGestureDetector,
-    val onTouchEventStart: () -> Unit = {},
-    val onTouchEventEnd: () -> Unit = {}
+    val onTouchEventStart: (ev: MotionEvent) -> Unit = {},
+    val onTouchEventEnd: (ev: MotionEvent) -> Unit = {}
 ) :
     CoordinatorLayout.Behavior<FrameLayout>(context, null) {
 
@@ -57,9 +57,9 @@ class DrawerTriggerBehavior(
         child: FrameLayout,
         ev: MotionEvent
     ): Boolean {
-        onTouchEventStart()
+        onTouchEventStart(ev)
         val result = drawerGestureDetector.onTouchEvent(ev, gesturableSlideDrawer)
-        onTouchEventEnd()
+        onTouchEventEnd(ev)
         return result
     }
 
