@@ -1,14 +1,11 @@
 package cn.iwakeup.slidedrawer
 
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.Scroller
-import kotlin.math.abs
+import cn.iwakeup.slidedrawer.gesture.GesturableSlideDrawer
 
 class SlideDrawer(context: Context, attrs: AttributeSet? = null) :
     FrameLayout(context, attrs, 0),
@@ -99,6 +96,10 @@ class SlideDrawer(context: Context, attrs: AttributeSet? = null) :
         }
 
         return GesturableSlideDrawer.DrawerState.DRAGGLING
+    }
+
+    override fun getDrawerWidth(): Int {
+        return measuredWidth
     }
 
     override fun computeScroll() {

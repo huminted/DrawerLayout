@@ -1,13 +1,11 @@
-package cn.iwakeup.slidedrawer
+package cn.iwakeup.slidedrawer.gesture
 
-import android.util.Log
 import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.View
 import kotlin.math.abs
 
-
-class GestureDelegate(
+class DrawerGestureDetector(
     val velocityTracker: VelocityTracker,
     val scrollSlop: Int,
     var enabled: Boolean = true
@@ -124,7 +122,6 @@ class GestureDelegate(
 
                 val isFling = abs(xVelocity) > 1000
 
-                Log.d("MinDebug", "GestureDelegate onTouchEvent: ${xVelocity}")
 
                 if (isFling) {
                     val direction =

@@ -10,7 +10,12 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.view.doOnLayout
 import androidx.core.view.updateLayoutParams
+import cn.iwakeup.slidedrawer.gesture.DrawerGestureDetector
+import cn.iwakeup.slidedrawer.gesture.DrawerTriggerBehavior
+import cn.iwakeup.slidedrawer.gesture.OverlayGestureDetector
 
 
 fun prepareDrawerContainer(context: Context): SlideDrawer {
@@ -22,31 +27,23 @@ fun prepareDrawerContainer(context: Context): SlideDrawer {
     }
 }
 
-fun prepareMainContainer(context: Context, gestureDelegate: GestureDelegate): ViewGroup {
+fun prepareMainContainer(
+    context: Context,
+    drawerGestureDetector: DrawerGestureDetector,
+    overlayGestureDetector: OverlayGestureDetector
+): ViewGroup {
     return FrameLayout(context).apply {
         layoutParams = LayoutParams(
             LayoutParams.MATCH_PARENT,
             LayoutParams.MATCH_PARENT
         ).apply {
-            behavior = DrawerTriggerBehavior(context, gestureDelegate)
+            behavior = DrawerTriggerBehavior(context, drawerGestureDetector, overlayGestureDetector)
         }
     }
 }
 
-fun prepareDimmingView(context: Context): View {
-    return View(context, null).apply {
-        layoutParams = LayoutParams(
-            LayoutParams.MATCH_PARENT,
-            LayoutParams.MATCH_PARENT
-        )
-        setBackgroundColor(Color.BLACK)
-        alpha = 0f
-
-    }
-}
-
 class DrawerLayout(context: Context, attrs: AttributeSet? = null) :
-    CoordinatorLayout(context, attrs), SlideDrawer.Listener, View.OnClickListener {
+    CoordinatorLayout(context, attrs), SlideDrawer.Listener {
 
     companion object {
         const val DEFAULT_DRAWER_WIDTH = 300
@@ -54,21 +51,29 @@ class DrawerLayout(context: Context, attrs: AttributeSet? = null) :
 
     private val velocityTracker: VelocityTracker = VelocityTracker.obtain()
     private val scrollSlop = ViewConfiguration.get(context).scaledTouchSlop
-    private val gestureDelegate = GestureDelegate(velocityTracker, scrollSlop)
+    private val drawerGestureDetector = DrawerGestureDetector(velocityTracker, scrollSlop)
+    private val overlayGestureDetector = OverlayGestureDetector(context, {
+        closeDrawer()
+    })
     private var drawerWidth = toPx(context, DEFAULT_DRAWER_WIDTH)
     private val drawer = prepareDrawerContainer(context)
-    private val mainContainer = prepareMainContainer(context, gestureDelegate)
-    private val dimmingView = prepareDimmingView(context)
-
+    private val mainContainer = prepareMainContainer(
+        context,
+        drawerGestureDetector,
+        overlayGestureDetector
+    )
     private var drawerProgressListener: SlideDrawer.Listener? = null
+    private val overlayDrawable = Color.BLACK.toDrawable()
 
 
     init {
         addView(mainContainer)
-        addView(dimmingView)
         addView(drawer)
-        drawer.listener = this
-        setDimmingViewClickable(true)
+
+        mainContainer.doOnLayout {
+            overlayDrawable.setBounds(0, 0, mainContainer.width, mainContainer.height)
+            mainContainer.overlay.add(overlayDrawable)
+        }
     }
 
 
@@ -81,15 +86,7 @@ class DrawerLayout(context: Context, attrs: AttributeSet? = null) :
     }
 
     fun setDrawerSwipeable(swipeable: Boolean) {
-        gestureDelegate.enabled = swipeable
-    }
-
-    fun setDimmingViewClickable(clickable: Boolean) {
-        if (clickable) {
-            dimmingView.setOnClickListener(this)
-        } else {
-            dimmingView.setOnClickListener(null)
-        }
+        drawerGestureDetector.enabled = swipeable
     }
 
 
@@ -130,26 +127,23 @@ class DrawerLayout(context: Context, attrs: AttributeSet? = null) :
     }
 
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        drawer.listener = this
+    }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        gestureDelegate.release()
+        drawerGestureDetector.release()
         drawerProgressListener = null
         drawer.listener = null
     }
 
+
     override fun onProgress(progress: Float) {
         drawerProgressListener?.onProgress(progress)
-        dimmingView.alpha = progress * 0.3f
-        dimmingView.isClickable = progress == 1f
-
+        overlayDrawable.alpha = (255f * progress * 0.5).toInt()
     }
-
-    override fun onClick(v: View) {
-        if (v == dimmingView) {
-            closeDrawer()
-        }
-    }
-
 
 }
 

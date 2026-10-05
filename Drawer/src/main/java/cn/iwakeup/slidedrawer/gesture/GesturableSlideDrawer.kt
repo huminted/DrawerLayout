@@ -1,4 +1,4 @@
-package cn.iwakeup.slidedrawer
+package cn.iwakeup.slidedrawer.gesture
 
 interface GesturableSlideDrawer {
     enum class SlideDirection {
@@ -18,4 +18,6 @@ interface GesturableSlideDrawer {
     fun onFlingDrawer(velocityX: Float, direction: SlideDirection)
 
     fun getDrawerState(): DrawerState
+
+    fun getDrawerWidth(): Int
 }

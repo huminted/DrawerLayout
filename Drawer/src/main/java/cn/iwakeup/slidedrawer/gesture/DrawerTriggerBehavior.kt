@@ -1,19 +1,23 @@
-package cn.iwakeup.slidedrawer
+package cn.iwakeup.slidedrawer.gesture
 
 import android.content.Context
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-
 import android.widget.FrameLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
+import cn.iwakeup.slidedrawer.DrawerLayout
 
-class DrawerTriggerBehavior(context: Context, val gestureDelegate: GestureDelegate) :
+class DrawerTriggerBehavior(
+    context: Context,
+    val drawerGestureDetector: DrawerGestureDetector,
+    val overlayGestureDetector: OverlayGestureDetector
+) :
     CoordinatorLayout.Behavior<FrameLayout>(context, null) {
 
     private var gesturableSlideDrawer: GesturableSlideDrawer? = null
     private var nestedViewCanScrollToRight = false
+
 
     override fun onInterceptTouchEvent(
         parent: CoordinatorLayout,
@@ -22,18 +26,25 @@ class DrawerTriggerBehavior(context: Context, val gestureDelegate: GestureDelega
     ): Boolean {
 
         var state = GesturableSlideDrawer.DrawerState.HIDDEN
+        var drawerWidth = 0
+
         if (parent is DrawerLayout) {
             gesturableSlideDrawer = parent.getDrawer()
-            state =
-                gesturableSlideDrawer?.getDrawerState() ?: GesturableSlideDrawer.DrawerState.HIDDEN
+            state = gesturableSlideDrawer?.getDrawerState() ?: state
+            drawerWidth = parent.getDrawer().getDrawerWidth()
         }
 
-        val intercepted =
-            gestureDelegate.onInterceptTouchEvent(
-                ev,
-                nestedViewCanScrollToRight,
-                state
-            )
+        // if it is a clicking overlay gesture, no need to check if it is drawer gesture
+        if (state == GesturableSlideDrawer.DrawerState.EXPANDED && drawerWidth > 0) {
+            if (overlayGestureDetector.onTouchEvent(ev, drawerWidth)) return true
+
+        }
+
+        val intercepted = drawerGestureDetector.onInterceptTouchEvent(
+            ev,
+            nestedViewCanScrollToRight,
+            state
+        )
 
         return intercepted
     }
@@ -45,7 +56,7 @@ class DrawerTriggerBehavior(context: Context, val gestureDelegate: GestureDelega
         ev: MotionEvent
     ): Boolean {
 
-        return gestureDelegate.onTouchEvent(ev, gesturableSlideDrawer)
+        return drawerGestureDetector.onTouchEvent(ev, gesturableSlideDrawer)
     }
 
 
