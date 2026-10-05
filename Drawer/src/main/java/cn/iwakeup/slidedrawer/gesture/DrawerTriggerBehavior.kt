@@ -11,7 +11,9 @@ import cn.iwakeup.slidedrawer.DrawerLayout
 class DrawerTriggerBehavior(
     context: Context,
     val drawerGestureDetector: DrawerGestureDetector,
-    val overlayGestureDetector: OverlayGestureDetector
+    val overlayGestureDetector: OverlayGestureDetector,
+    val onTouchEventStart: () -> Unit = {},
+    val onTouchEventEnd: () -> Unit = {}
 ) :
     CoordinatorLayout.Behavior<FrameLayout>(context, null) {
 
@@ -55,8 +57,10 @@ class DrawerTriggerBehavior(
         child: FrameLayout,
         ev: MotionEvent
     ): Boolean {
-
-        return drawerGestureDetector.onTouchEvent(ev, gesturableSlideDrawer)
+        onTouchEventStart()
+        val result = drawerGestureDetector.onTouchEvent(ev, gesturableSlideDrawer)
+        onTouchEventEnd()
+        return result
     }
 
 

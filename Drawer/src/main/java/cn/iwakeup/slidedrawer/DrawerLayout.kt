@@ -2,6 +2,7 @@ package cn.iwakeup.slidedrawer
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet
 import android.view.VelocityTracker
 import android.view.View
@@ -30,25 +31,36 @@ fun prepareDrawerContainer(context: Context): SlideDrawer {
 fun prepareMainContainer(
     context: Context,
     drawerGestureDetector: DrawerGestureDetector,
-    overlayGestureDetector: OverlayGestureDetector
+    overlayGestureDetector: OverlayGestureDetector,
+    onTouchEventStart: () -> Unit,
+    onTouchEventEnd: () -> Unit
 ): ViewGroup {
     return FrameLayout(context).apply {
         layoutParams = LayoutParams(
             LayoutParams.MATCH_PARENT,
             LayoutParams.MATCH_PARENT
         ).apply {
-            behavior = DrawerTriggerBehavior(context, drawerGestureDetector, overlayGestureDetector)
+            behavior = DrawerTriggerBehavior(
+                context, drawerGestureDetector, overlayGestureDetector,
+                onTouchEventStart, onTouchEventEnd
+            )
         }
     }
 }
 
 class DrawerLayout(context: Context, attrs: AttributeSet? = null) :
     CoordinatorLayout(context, attrs), SlideDrawer.Listener {
+    interface DrawerListener : SlideDrawer.Listener {
+        fun onStart()
+        fun onEnd()
+
+    }
 
     companion object {
         const val DEFAULT_DRAWER_WIDTH = 300
     }
 
+    private var drawerProgressListener: DrawerListener? = null
     private val velocityTracker: VelocityTracker = VelocityTracker.obtain()
     private val scrollSlop = ViewConfiguration.get(context).scaledTouchSlop
     private val drawerGestureDetector = DrawerGestureDetector(velocityTracker, scrollSlop)
@@ -60,10 +72,17 @@ class DrawerLayout(context: Context, attrs: AttributeSet? = null) :
     private val mainContainer = prepareMainContainer(
         context,
         drawerGestureDetector,
-        overlayGestureDetector
+        overlayGestureDetector,
+        {
+            drawerProgressListener?.onStart()
+        },
+        {
+            drawerProgressListener?.onEnd()
+        }
     )
-    private var drawerProgressListener: SlideDrawer.Listener? = null
-    private val overlayDrawable = Color.BLACK.toDrawable()
+    private val overlayDrawable = Color.BLACK.toDrawable().apply {
+        alpha = 0
+    }
 
 
     init {
@@ -90,7 +109,7 @@ class DrawerLayout(context: Context, attrs: AttributeSet? = null) :
     }
 
 
-    fun addDrawerListener(listener: SlideDrawer.Listener) {
+    fun addDrawerListener(listener: DrawerListener) {
         drawerProgressListener = listener
     }
 

@@ -12,7 +12,6 @@ import androidx.core.view.WindowInsetsCompat
 
 
 import cn.iwakeup.slidedrawer.DrawerLayout
-import cn.iwakeup.slidedrawer.SlideDrawer
 import cn.iwakeup.slidedrawer.example.fragment.ViewPagerFragment
 import cn.iwakeup.slidedrawer.example.list.getBlankFrameLayout
 
@@ -71,9 +70,16 @@ class MainActivity : AppCompatActivity() {
             changeStatusText(enableOrDisableTextView, enable, "Enabled", "Disabled")
         }
 
-        drawer.addDrawerListener(object : SlideDrawer.Listener {
+        drawer.addDrawerListener(object : DrawerLayout.DrawerListener {
             override fun onProgress(progress: Float) {
                 progressText.text = "Open Progress:\n$progress"
+            }
+
+            override fun onStart() {
+
+            }
+
+            override fun onEnd() {
             }
 
         })
